@@ -2,15 +2,31 @@
 
 Purification for pdf files. Part of autosimulacrum.
 
+LMM extraction is bad enough that I can't recommend it. It's sensitive to the prompt.
+
 ## How to
 
 -   `utils/check_resolution.py`
--   https://platform.openai.com/docs/guides/vision/calculating-costs
-    -   https://openai.com/pricing
-        -   low-res: $0.00085 per image
-            -   x200 = $0.17
-        -   hi-res: $0.01105 per image (1200x1800)
-            -   x200 = $2,21
+
+## LLM OCR possible issues
+
+-   classification too sensitive
+-   classification not sensitive enough
+-   extracts more than it should
+
+## Estimated costs per page
+
+    - haiku:    $0.0005 (x200 = 0.1)
+    - sonnet:   $0.007  (x200 = 1.4)
+    - opus:     $0.03   (x200 = 4.0)
+    - (gpt4v)[https://openai.com/pricing]:
+        - low-res:  $0.00085 (x200 = 0.17)
+        - hi-res:   $0.01105 (x200 = 2.0)
+
+## ~
+
+    - claude
+        - accepts webp
 
 ## TODO
 

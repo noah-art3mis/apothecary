@@ -5,7 +5,6 @@ FILE_NAME = "ksi-pt1"
 
 FILE_PATH = f'./input/{FILE_NAME}.pdf'
 OUTPUT_FILE = f'./output/{FILE_NAME}.txt'
-# PAGE_RESOLUTION = ~1200x1800
 
 def check_image_resolution(pdf_path, output_path):
 
