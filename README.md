@@ -2,17 +2,9 @@
 
 Purification for pdf files. Part of autosimulacrum.
 
-LMM extraction is bad enough that I can't recommend it. It's sensitive to the prompt.
-
 ## How to
 
 -   `utils/check_resolution.py`
-
-## LLM OCR possible issues
-
--   classification too sensitive
--   classification not sensitive enough
--   extracts more than it should
 
 ## Estimated costs per page
 
@@ -23,13 +15,11 @@ LMM extraction is bad enough that I can't recommend it. It's sensitive to the pr
         - low-res:  $0.00085 (x200 = 0.17)
         - hi-res:   $0.01105 (x200 = 2.0)
 
-## ~
-
-    - claude
-        - accepts webp
-
 ## TODO
 
+-   get pixmaps from annots
+
+-   try claude with pdfs (see https://github.com/anthropics/anthropic-cookbook/blob/main/multimodal/best_practices_for_vision.ipynb)
 -   annotation extraction / export comments
 
     -   'pdf data extraction'
@@ -40,6 +30,8 @@ LMM extraction is bad enough that I can't recommend it. It's sensitive to the pr
     -   https://library-guides.ucl.ac.uk/zotero/extracting-annotations
     -   ocr ebook
     -   https://nanonets.com/blog/ocr-with-tesseract/
+    -   claude performance png x webp?
+    -   change from pymupdf to pdfium2 (mu is gpl)
 
 -   gpt4v
 
@@ -52,6 +44,12 @@ LMM extraction is bad enough that I can't recommend it. It's sensitive to the pr
 
 ## Refs
 
+-   LLMs
+    -   https://github.com/anthropics/anthropic-cookbook/blob/main/misc/pdf_upload_summarization.ipynb
+    -   https://github.com/anthropics/anthropic-cookbook/blob/main/multimodal/reading_charts_graphs_powerpoints.ipynb
+-   Anthropic
+    -   https://github.com/anthropics/anthropic-cookbook/blob/main/multimodal/best_practices_for_vision.ipynb
+        -   `{"type": "text", "text": "You have perfect vision and pay great attention to detail which makes you an expert at counting objects in images. How many dogs are in this picture? Before providing the answer in <answer> tags, think step by step in <thinking> tags and analyze every part of the image."}`
 -   https://tesseract-ocr.github.io/tessdoc/ImproveQuality.html
 -   https://nanonets.com/blog/pdf-ocr-python/
 
@@ -66,7 +64,14 @@ LMM extraction is bad enough that I can't recommend it. It's sensitive to the pr
     -   https://github.com/PaddlePaddle/PaddleOCR/blob/main/doc/doc_en/ocr_book_en.md
 
 -   LLM
+
     -   vision models
     -   claude, gpt4t, qwen, cog, llava
+
+-   PyMuPDF uses GPL license.
+    -   alternatives: https://github.com/mindee/doctr/issues/23#issuecomment-795234413
+    -   https://martinthoma.medium.com/the-python-pdf-ecosystem-in-2023-819141977442
+    -   https://github.com/pypdfium2-team/pypdfium2
+    -   pypdf, PyMuPDF, pypdfium2, Tika, pdfplumber, pdfminer.six
 
 ##

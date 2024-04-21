@@ -1,78 +1,68 @@
-import tempfile
-import pdf2image
-from dotenv import load_dotenv
-import anthropic
-from utils.encode_image import pil_to_base64
-from utils.prompts import PROMPT_EXTRACTION, SYSTEM_EXTRACTION
-from utils.models import CLAUDE
-from utils.estimate_costs import estimate_costs
-from retry import retry
 import logging
-
-FILE_NAME = "ksi-pt1"
-PAGE_LIMIT = 10
-MODEL = CLAUDE.HAIKU.value.id
-PROMPT = PROMPT_EXTRACTION
-SYSTEM = SYSTEM_EXTRACTION
-
-IMAGE_TYPE = "image/jpeg"
-FILE_PATH = f"./input/{FILE_NAME}.pdf"
-OUTPUT_FILE = f"./output/{FILE_NAME}-{MODEL}.jsonl"
+from dotenv import load_dotenv
+from retry import retry
+import anthropic
+from utils.encode_image import pdf_to_base64
+from utils.estimate_costs import estimate_costs
+from configs import *
 
 
 def convert_and_extract_text(pdf_path, output_path, page_limit):
     print("== APOTHECARY AI TEXT EXTRACTION BEGIN ==")
     print(f"Converting '{FILE_NAME}' PDF to images...")
 
-    with tempfile.TemporaryDirectory() as path:
-        images = pdf2image.convert_from_path(pdf_path, output_folder=path)
+    images = pdf_to_base64(pdf_path)
 
-        print(f"Extracting text from images using {MODEL}...")
-        with open(output_path, "w", encoding="utf-8") as file:
-            for page_number, page in enumerate(images):
-                if page_number + 1 > page_limit:
-                    break
+    print(f"Extracting text from images using {MODEL}...")
+    with open(output_path, "w", encoding="utf-8") as file:
+        for page_number, page in enumerate(images):
+            if page_number + 1 > page_limit * 2:
+                continue
 
-                img = pil_to_base64(page)
+            if page_number + 1 < page_limit:
+                continue
 
-                try:
+            try:
+                messages = get_messages(PROMPT, IMAGE_TYPE, page)
+                response = query_claude_vision(MODEL, messages, SYSTEM)
+                estimate_costs(response)
+                completion = response.content[0].text
+                file.write(completion)
+                file.write("\n")
+                print(f"Page: {page_number + 1} successful")
+            except Exception as e:
+                print(f"Page: {page_number + 1} failed: {e}")
 
-                    response = query_claude_vision(MODEL, img, IMAGE_TYPE)
-                    estimate_costs(response)
-                    completion = response.content[0].text
-                    file.write(completion)
-                    file.write("\n")
-                    print(f"Page: {page_number + 1} successful")
-                except Exception as e:
-                    print(f"Page: {page_number + 1} failed")
-                    print(e)
 
-
-@retry(tries=10, delay=1, jitter=1)
-def query_claude_vision(model, image_data, image_type):
+@retry(tries=10, delay=1, backoff=2)
+def query_claude_vision(model, messages, system):
     message = client.messages.create(
         model=model,
         max_tokens=1024,
         temperature=0,
-        system=SYSTEM,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "source": {
-                            "type": "base64",
-                            "media_type": image_type,
-                            "data": image_data,
-                        },
-                    },
-                    {"type": "text", "text": PROMPT},
-                ],
-            }
-        ],
+        system=system,
+        messages=messages,
     )
     return message
+
+
+def get_messages(prompt, image_type, image_data):
+    return [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": image_type,
+                        "data": image_data,
+                    },
+                },
+                {"type": "text", "text": prompt},
+            ],
+        }
+    ]
 
 
 if __name__ == "__main__":

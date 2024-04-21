@@ -3,9 +3,13 @@ prompt_classification = """Check this page for any highlighted text. Respond wit
 
 # PROMPT_EXTRACTION = """Scan this page for any text highlighted in yellow. If you find yellow highlighted text, extract it. There might be multiple blocks of highlighted text. If that is the case, treat them as separate entities. Provide the output in JSON format, including the page number and the extracted text. For each block of text, format the response as follows: {'page_number': "[page_number]", 'highlighted_text': '[extracted_text]'}. If there is no highlighted text, respond with an empty string."""
 
-PROMPT_EXTRACTION = "Examine this page for any text highlighted in yellow. If you identify one or more blocks of yellow highlighted text, extract each block separately. For each block, provide the output in a structured JSON format that includes the page number and the extracted text."
+# PROMPT_EXTRACTION = "Examine this page for any text highlighted in yellow (#fff000). Transcribe the highlighted text. If you identify one or more blocks of highlighted text, transcribe each block separately. If no highlighted text is present, respond with an empty string."
 
-SYSTEM_EXTRACTION = "Respond exclusively in JSON. Don't use line breaks. The JSON must have two fields: page_number (which is a string) and highlighted_text (an array of strings). If no highlighted text is present, respond with an empty string to indicate the absence of highlighted content."
+PROMPT_EXTRACTION = "Transcribe any text highlighted in yellow (#fff000) on this page. Respond only with the transcribed text. If no highlighted text is present, respond with an empty string."
+
+SYSTEM_EXTRACTION = ""
+
+# SYSTEM_EXTRACTION = "Respond exclusively in JSON. Don't use line breaks. The JSON must have two fields: page_number (which is a string) and highlighted_text (an array of strings)."
 
 # PROMPT_EXTRACTION = "Review this page to identify any text highlighted in yellow. If you find yellow highlighted text, extract it. For each block of highlighted text, note the page number and the text itself. If multiple blocks are present, handle each separately. If no yellow highlighted text is found, do not perform any extraction."
 
