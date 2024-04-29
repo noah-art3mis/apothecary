@@ -1,21 +1,40 @@
-## Socratic Apothecary
+## Automaton - Apothecary
 
-Purification for pdf files. Part of autosimulacrum.
+Purification for pdf files. Part of automaton, the simulacrum automation package.
 
 ## How to
 
+Before doing anything:
+
 1. make sure the ocr quality of the original pdf is not terrible
-1. `pip install requirements.txt`
-1. use pdfannots to get the annotations
-    - `pdfannots -p -f json FILE_PATH/FILE_NAME -o intermediate/0_FILE_NAME`
+1. highlight pdf with desired annotations
+
+Now:
+
+1. clone this repo
+    - `git clone https://github.com/noah-art3mis/apothecary.git`
+1. install requirements
+    - `pip install requirements.txt`
 1. drop pdf file in `input` folder
-1. set `INPUT_FILE` in configs
+1. set `INPUT_FILE` in configs (just the name of the file, without extension)
 1. set `PAGE_OFFSET`
+    - this only matters if you want to know exactly which page the annotation is from. leave at 0 otherwise.
+    - scanned pdfs usually tend to misalign the number of pages in the document and the page numbers of the book.
     - check how many pages you need to add or subtract to make the pages sync. check in a few places since it can vary
-        - if page is X and pdf_page is Y, you need Z
-        - if page is X and pdf_page is Y, you need -Z
+        - if page is 100 and pdf_page is 110, the page offset should be 10
+        - if page is 100 and pdf_page is 90, the page offset should be -10
+1. extract annotations from pdf. this step also cleans up some stuff.
+    - `python3 purify.py`
+1. output is saved at `output`
+    - if you need to debug something, intermediate steps are saved at `intermediates`
 
 ## TODO
+
+    - add total cost
+    - add period at the end if no period
+    - issues with ai cleanup
+        - changes uk to us english
+        - changes 'logical flow'
 
 ## Refs
 
