@@ -1,3 +1,4 @@
+import logging
 from configs import MODELS
 
 
@@ -8,11 +9,14 @@ def find_by_id(id, models):
     return None
 
 
-def estimate_costs(response) -> str:
+def estimate_costs(response) -> int:
     model = find_by_id(response.model, MODELS)
 
     if model is None:
-        return f"Was not able to find model {response.model} in saved models. Skipping cost estimation"
+        logging.info(
+            f"Was not able to find model {response.model} in saved models. Skipping cost estimation"
+        )
+        return 0
 
     per_million_tokens = 1_000_000
 
@@ -23,4 +27,7 @@ def estimate_costs(response) -> str:
     o_cost = model["output_cost"] * o_tokens / per_million_tokens
     total_cost = i_cost + o_cost
 
-    return f"Model: {model['name']} | Tokens: {i_tokens + o_tokens} ({i_tokens}+{o_tokens}) | Total cost: ${total_cost:.4f}"
+    logging.info(
+        f"Model: {model['name']} | Tokens: {i_tokens + o_tokens} ({i_tokens}+{o_tokens}) | Total cost: ${total_cost:.4f}"
+    )
+    return total_cost

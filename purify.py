@@ -98,16 +98,20 @@ def concatenate_text_in_same_page(data):
 
 def ai_cleanup_and_save_every_time(data, save_counter):
     results = []
+    costs = 0
+
     for d in data:
         page = d["page"]
-        text = ai_cleanup(d["text"], d["page"])
+        text, cost = ai_cleanup(d["text"], d["page"])
         results.append({"page": page, "text": text})
+        costs += cost
 
         with open(
             f"intermediate/{FILE_NAME}_{save_counter}.json", "w", encoding="utf-8"
         ) as f:
             json.dump(results, f, indent=2)
 
+    logging.info(f"total costs: ${costs:.4f}")
     return results
 
 

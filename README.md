@@ -27,14 +27,18 @@ Now:
     - `python3 purify.py`
 1. output is saved at `output`
     - if you need to debug something, intermediate steps are saved at `intermediates`
+1. check changes in a diffchecker
 
 ## TODO
 
 -   add total cost
--   add period at the end if no period
 -   issues with ai cleanup
     -   changes uk to us english
     -   changes 'logical flow'
+    -   refuses to answer certain things
+-   doesnt concatenate annotations between pages
+-   concatenates in the same page even if different
+-   remove chain of thought
 
 ## Refs
 

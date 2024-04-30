@@ -26,27 +26,25 @@ from anthropic.types import (
 )
 
 
-def ai_cleanup(text: str, page: str) -> str:
+def ai_cleanup(text: str, page: str) -> tuple[str, int]:
 
     prompt = get_prompt(text)
     model = get_model(MODEL)
 
-    try:
-        response = query_claude(model, prompt)
-    except Exception as e:
-        logging.error(e)
+    response = query_claude(model, prompt)
 
-    if response.type == "error":
-        logging.warning(f"Error on page {page}: {response}")  # type: ignore
-    else:
-        logging.info(f"Page {page} | {estimate_costs(response)}")
+    if "error" in response:
+        type = response["error"]["type"]
+        message = response["error"]["message"]
+        logging.warning(f"{type}+ {message}")
+        return message, 0
 
     completion = response.content[0].text
     logs, answer = parse_completion(completion)
 
     logging.info(logs.replace("\n", r"\ "))
 
-    return answer
+    return answer, estimate_costs(response)
 
 
 def get_prompt(text: str) -> str:
