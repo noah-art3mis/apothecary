@@ -39,10 +39,11 @@ Now:
     - `python3 purify.py`
 1. output is saved at `output`
     - if you need to debug something, intermediate steps are saved at `intermediates`
-1. check changes in a diffchecker
+1. check changes in a [diffchecker](https://www.diffchecker.com/text-compare/)
 
 ## TODO
 
+-   sub '...' back
 -   collect errors
 -   issues with ai cleanup
     -   changes uk to us english
