@@ -2,6 +2,8 @@
 
 Purification for pdf files. Part of automaton, the simulacrum automation package.
 
+## Costs
+
 ## How to
 
 Before doing anything:
@@ -23,6 +25,16 @@ Now:
     - check how many pages you need to add or subtract to make the pages sync. check in a few places since it can vary
         - if page is 100 and pdf_page is 110, the page offset should be 10
         - if page is 100 and pdf_page is 90, the page offset should be -10
+1. set `MODEL`
+    - current options: `haiku`, `sonnet` and `opus`
+    - API calls cost money.
+        - haiku: less than 10 cents per book. (12 times cheaper than sonnet)
+        - sonnet: less than $1 per book
+        - opus: i don't know (5 times more expensive than sonnet)
+1. set `ANTHROPIC_API_KEY` in `.env`
+    - make a `.env` file with your API key.
+    - `echo "ANTHROPIC_API_KEY=your_api_key_here" > .env`
+    - get an API key if you don't have one.
 1. extract annotations from pdf. this step also cleans up some stuff.
     - `python3 purify.py`
 1. output is saved at `output`
@@ -31,14 +43,15 @@ Now:
 
 ## TODO
 
--   add total cost
+-   collect errors
 -   issues with ai cleanup
     -   changes uk to us english
     -   changes 'logical flow'
     -   refuses to answer certain things
 -   doesnt concatenate annotations between pages
 -   concatenates in the same page even if different
--   remove chain of thought
+-   test for errors on api
+-   add skip ai cleanup
 
 ## Refs
 

@@ -25,9 +25,9 @@ def estimate_costs(response) -> int:
 
     i_cost = model["input_cost"] * i_tokens / per_million_tokens
     o_cost = model["output_cost"] * o_tokens / per_million_tokens
-    total_cost = i_cost + o_cost
+    cost = i_cost + o_cost
 
     logging.info(
-        f"Model: {model['name']} | Tokens: {i_tokens + o_tokens} ({i_tokens}+{o_tokens}) | Total cost: ${total_cost:.4f}"
+        f"Model: {model['name']} | Tokens: {i_tokens + o_tokens} ({i_tokens}+{o_tokens}) | Cost: ${cost:.4f}"
     )
-    return total_cost
+    return cost

@@ -1,8 +1,8 @@
 FILE_NAME = "ksi-pt1"
-FILE_NAME = "test"
+# FILE_NAME = "test"
 PAGE_OFFSET = -9
 MAX_CHARACTERS_PER_PLATE = [300, 350, 400]
-MODEL = "haiku"
+MODEL = "sonnet"
 
 MODELS = [
     {
