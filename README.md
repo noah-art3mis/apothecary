@@ -30,11 +30,11 @@ Now:
 
 ## TODO
 
-    - add total cost
-    - add period at the end if no period
-    - issues with ai cleanup
-        - changes uk to us english
-        - changes 'logical flow'
+-   add total cost
+-   add period at the end if no period
+-   issues with ai cleanup
+    -   changes uk to us english
+    -   changes 'logical flow'
 
 ## Refs
 

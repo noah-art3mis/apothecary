@@ -5,46 +5,55 @@ import json
 import nltk
 from utils.query_claude import ai_cleanup
 from configs import *
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S",
+    filename="purify.log",
+    encoding="utf-8",
+)
 
 
 def main():
     save_counter = 0
 
-    print(f"purifying {FILE_NAME}.pdf")
+    logging.info(f"purifying {FILE_NAME}.pdf")
 
     if not os.path.exists(f"intermediate/{FILE_NAME}_0.json"):
-        print(f"0. extracting annotations")
+        logging.info(f"0. extracting annotations")
         nltk.download("punkt")
         get_annots_from_pdf()
     else:
-        print(f"0. {FILE_NAME}_0 exists, skipping annot extraction")
+        logging.info(f"0. {FILE_NAME}_0 exists, skipping annot extraction")
 
     with open(f"intermediate/{FILE_NAME}_0.json", "r", encoding="utf-8") as f:
         data = json.load(f)
 
     data = [{"page": d["page"], "text": d["text"].strip()} for d in data]
     save_counter = save_intermediate(data, save_counter)
-    print(f"1. removed hanging whitespace")
+    logging.info(f"1. removed hanging whitespace")
 
     data = [{"page": d["page"], "text": re.sub(r"\s+", " ", d["text"])} for d in data]
     save_counter = save_intermediate(data, save_counter)
-    print(f"2. removed multiple spaces")
+    logging.info(f"2. removed multiple spaces")
 
     data = [{"page": str(d["page"] + PAGE_OFFSET), "text": d["text"]} for d in data]
     save_counter = save_intermediate(data, save_counter)
-    print(f"3. fixed page numbers")
+    logging.info(f"3. fixed page numbers")
 
     data = concatenate_text_in_same_page(data)
     save_counter = save_intermediate(data, save_counter)
-    print(f"4. concatenated text in same page")
+    logging.info(f"4. concatenated text in same page")
 
-    print(f"5. ai cleanup")
-    data = [{"page": d["page"], "text": ai_cleanup(d["text"], d["page"])} for d in data]
+    logging.info(f"5. ai cleanup")
+    data = ai_cleanup_and_save_every_time(data, save_counter + 1)
     save_counter = save_intermediate(data, save_counter)
 
     data = [{"page": d["page"], "text": nltk.sent_tokenize(d["text"])} for d in data]
     save_counter = save_intermediate(data, save_counter)
-    print(f"6. separate sentences")
+    logging.info(f"6. separate sentences")
 
 
 def get_annots_from_pdf():
@@ -87,7 +96,22 @@ def concatenate_text_in_same_page(data):
     return result
 
 
+def ai_cleanup_and_save_every_time(data, save_counter):
+    results = []
+    for d in data:
+        page = d["page"]
+        text = ai_cleanup(d["text"], d["page"])
+        results.append({"page": page, "text": text})
+
+        with open(
+            f"intermediate/{FILE_NAME}_{save_counter}.json", "w", encoding="utf-8"
+        ) as f:
+            json.dump(results, f, indent=2)
+
+    return results
+
+
 if __name__ == "__main__":
-    print("== APOTHECARY START == ")
+    logging.info("== APOTHECARY START == ")
     main()
-    print("== APOTHECARY END == ")
+    logging.info("== APOTHECARY END == ")

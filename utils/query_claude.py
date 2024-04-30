@@ -4,7 +4,7 @@ import anthropic
 from utils.estimate_costs import estimate_costs
 from configs import MODEL, MODELS
 import re
-
+import logging
 
 from anthropic.types import (
     ContentBlock,
@@ -34,15 +34,17 @@ def ai_cleanup(text: str, page: str) -> str:
     try:
         response = query_claude(model, prompt)
     except Exception as e:
-        print(e)
+        logging.error(e)
 
-    print("\tpage ", page)
-    print("\t\t", estimate_costs(response))
+    if response.type == "error":
+        logging.warning(f"Error on page {page}: {response}")  # type: ignore
+    else:
+        logging.info(f"Page {page} | {estimate_costs(response)}")
 
     completion = response.content[0].text
     logs, answer = parse_completion(completion)
 
-    print("\t\t", logs.replace("\n", "\n\t\t"))
+    logging.info(logs.replace("\n", r"\ "))
 
     return answer
 
