@@ -1,8 +1,6 @@
 ## Automaton - Apothecary
 
-Purification for pdf files. Part of automaton, the simulacrum automation package.
-
-## Costs
+Purification for pdf files. Part of AUTOMATON, the simulacrum automation package.
 
 ## How to
 
@@ -25,16 +23,16 @@ Now:
     - check how many pages you need to add or subtract to make the pages sync. check in a few places since it can vary
         - if page is 100 and pdf_page is 110, the page offset should be 10
         - if page is 100 and pdf_page is 90, the page offset should be -10
-1. set `MODEL`
-    - current options: `haiku`, `sonnet` and `opus`
-    - API calls cost money.
-        - haiku: less than 10 cents per book. (12 times cheaper than sonnet)
-        - sonnet: less than $1 per book
-        - opus: i don't know (5 times more expensive than sonnet)
 1. set `ANTHROPIC_API_KEY` in `.env`
     - make a `.env` file with your API key.
     - `echo "ANTHROPIC_API_KEY=your_api_key_here" > .env`
     - get an API key if you don't have one.
+    - API calls cost money.
+1. set `MODEL`
+    - options:
+        - `haiku`: less than 10 cents per book. (12 times cheaper than sonnet)
+        - `sonnet`: less than $1 per book. this is the default. haiku performs slightly worse (i.e. changes behavior to behaviour even when explicitly told not to.)
+        - `opus`: i don't know (5 times more expensive than sonnet)
 1. extract annotations from pdf. this step also cleans up some stuff.
     - `python3 purify.py`
 1. output is saved at `output`
@@ -43,16 +41,16 @@ Now:
 
 ## TODO
 
--   sub '...' back
 -   collect errors
--   issues with ai cleanup
-    -   changes uk to us english
-    -   changes 'logical flow'
-    -   refuses to answer certain things
+-   add skip ai cleanup
+-   add [prompt testing library](https://docs.anthropic.com/claude/docs/prompt-engineering)
+-   separate identification and correction [tasks](https://docs.anthropic.com/claude/docs/chain-prompts#validating-outputs)
+
+## Known issues
+
 -   doesnt concatenate annotations between pages
 -   concatenates in the same page even if different
--   test for errors on api
--   add skip ai cleanup
+-   does not treat ellipses properly if they were already in the text
 
 ## Refs
 

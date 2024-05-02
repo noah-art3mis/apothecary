@@ -51,9 +51,13 @@ def main():
     data = ai_cleanup_and_save_every_time(data, save_counter + 1)
     save_counter = save_intermediate(data, save_counter)
 
+    data = [{"page": d["page"], "text": fix_ellipses(d["text"])} for d in data]
+    save_counter = save_intermediate(data, save_counter)
+    logging.info(f"6. sub ... for …")
+
     data = [{"page": d["page"], "text": nltk.sent_tokenize(d["text"])} for d in data]
     save_counter = save_intermediate(data, save_counter)
-    logging.info(f"6. separate sentences")
+    logging.info(f"7. separate sentences")
 
 
 def get_annots_from_pdf():
@@ -82,7 +86,7 @@ def save_intermediate(result, save_counter):
 
 
 def concatenate_text_in_same_page(data):
-    SEPARATOR = " … "
+    SEPARATOR = " ... "
     pages = {}
     for d in data:
         page = d["page"]
@@ -114,6 +118,12 @@ def ai_cleanup_and_save_every_time(data, save_counter):
 
     logging.info(f"queries: {queries}, total cost: ${costs:.4f}")
     return results
+
+
+def fix_ellipses(text):
+    result = re.sub(r"(?<!\s)\.\.\.", " …", text)
+    result = result.replace("...", "…")
+    return result
 
 
 if __name__ == "__main__":
