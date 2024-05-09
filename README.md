@@ -2,6 +2,8 @@
 
 Purification for pdf files. Part of AUTOMATON, the simulacrum automation package.
 
+Results in a json file. Convert to .md for a manual cleanup pass, then convert back to json or yaml that can then be ingested by Semblance. If you want to translate it, do it before that.
+
 ## How to
 
 Before doing anything:
@@ -15,33 +17,49 @@ Now:
     - `git clone https://github.com/noah-art3mis/apothecary.git`
 1. install requirements
     - `pip install requirements.txt`
-1. drop pdf file in `input` folder
+1. move pdf file to `input` folder
 1. set `INPUT_FILE` in configs (just the name of the file, without extension)
+1. set `AUTHOR`, `TITLE` and `BOOK_ID`
+    - author: author of the book
+    - title: title of the book
+    - id: a string to identify the book (such as "tst", "ime", "ose", etc.)
 1. set `PAGE_OFFSET`
-    - this only matters if you want to know exactly which page the annotation is from. leave at 0 otherwise.
-    - scanned pdfs usually tend to misalign the number of pages in the document and the page numbers of the book.
+    - this only matters if you want to know exactly which page the annotation comes from. leave at 0 otherwise.
+    - scanned pdfs usually misalign the page number of the book with the page number of the pdf.
     - check how many pages you need to add or subtract to make the pages sync. check in a few places since it can vary
-        - if page is 100 and pdf_page is 110, the page offset should be 10
-        - if page is 100 and pdf_page is 90, the page offset should be -10
+        - if page is 100 and pdf_page is 110, the page offset should be -10
+        - if page is 100 and pdf_page is 90, the page offset should be 10
 1. set `ANTHROPIC_API_KEY` in `.env`
+    - get an API key if you don't have one ([here](https://docs.anthropic.com/claude/reference/getting-started-with-the-api)).
     - make a `.env` file with your API key.
-    - `echo "ANTHROPIC_API_KEY=your_api_key_here" > .env`
-    - get an API key if you don't have one.
+        - `echo "ANTHROPIC_API_KEY=your_api_key_here" > .env`
     - API calls cost money.
 1. set `MODEL`
     - options:
-        - `haiku`: less than 10 cents per book. (12 times cheaper than sonnet)
-        - `sonnet`: less than $1 per book. this is the default. haiku performs slightly worse (i.e. changes behavior to behaviour even when explicitly told not to.)
-        - `opus`: i don't know (5 times more expensive than sonnet)
+        - `haiku`: less than 10 cents per book. (12x cheaper than sonnet)
+        - `sonnet`: less than $1 per book. this is the default.
+        - `opus`: i don't know (5x more expensive than sonnet)
 1. extract annotations from pdf. this step also cleans up some stuff.
     - `python3 purify.py`
+    - output does not show in stdin, but in `purify.log`
 1. output is saved at `output`
     - if you need to debug something, intermediate steps are saved at `intermediates`
-1. check changes in a [diffchecker](https://www.diffchecker.com/text-compare/)
+    - check changes in a [diffchecker](https://www.diffchecker.com/text-compare/)
+    - returns a Book object with the following fields:
+        - `author`
+        - `title`
+        - `id` (short identifier such as "tst" or "ime")
+        - `pages` (array of objects)
+            - `number`: page number
+            - `content`: array of sentences
+1. check logs to see if anything is amiss (errors from the api, etc)
+1. check diffs (from 4 to 5)
+1. manually edit output
 
 ## TODO
 
--   collect errors
+-   test prompts with crucible
+-   notify if any errors happened at the end
 -   add skip ai cleanup
 -   add [prompt testing library](https://docs.anthropic.com/claude/docs/prompt-engineering)
 -   separate identification and correction [tasks](https://docs.anthropic.com/claude/docs/chain-prompts#validating-outputs)
@@ -50,7 +68,7 @@ Now:
 
 -   doesnt concatenate annotations between pages
 -   concatenates in the same page even if different
--   does not treat ellipses properly if they were already in the text
+-   does not treat ellipses properly if they were already in the text. won't be fixed
 
 ## Refs
 

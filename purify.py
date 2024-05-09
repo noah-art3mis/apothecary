@@ -1,11 +1,15 @@
 import os
 import re
-import subprocess
 import json
-import nltk
-from utils.query_claude import ai_cleanup
-from configs import *
 import logging
+import datetime
+import subprocess
+
+import nltk
+
+from utils.json2md import json2md
+from utils.query_claude import ai_cleanup
+from configs import FILE_NAME, AUTHOR, TITLE, BOOK_ID, MODEL, PAGE_OFFSET
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,35 +33,54 @@ def main():
         logging.info(f"0. {FILE_NAME}_0 exists, skipping annot extraction")
 
     with open(f"intermediate/{FILE_NAME}_0.json", "r", encoding="utf-8") as f:
-        data = json.load(f)
+        pages = json.load(f)
 
-    data = [{"page": d["page"], "text": d["text"].strip()} for d in data]
-    save_counter = save_intermediate(data, save_counter)
+    pages = [{"page": d["page"], "text": d["text"].strip()} for d in pages]
+    save_counter = save_intermediate(pages, save_counter)
     logging.info(f"1. removed hanging whitespace")
 
-    data = [{"page": d["page"], "text": re.sub(r"\s+", " ", d["text"])} for d in data]
-    save_counter = save_intermediate(data, save_counter)
+    pages = [{"page": d["page"], "text": re.sub(r"\s+", " ", d["text"])} for d in pages]
+    save_counter = save_intermediate(pages, save_counter)
     logging.info(f"2. removed multiple spaces")
 
-    data = [{"page": str(d["page"] + PAGE_OFFSET), "text": d["text"]} for d in data]
-    save_counter = save_intermediate(data, save_counter)
+    pages = [{"page": str(d["page"] + PAGE_OFFSET), "text": d["text"]} for d in pages]
+    save_counter = save_intermediate(pages, save_counter)
     logging.info(f"3. fixed page numbers")
 
-    data = concatenate_text_in_same_page(data)
-    save_counter = save_intermediate(data, save_counter)
+    pages = concatenate_text_in_same_page(pages)
+    save_counter = save_intermediate(pages, save_counter)
     logging.info(f"4. concatenated text in same page")
 
     logging.info(f"5. ai cleanup")
-    data = ai_cleanup_and_save_every_time(data, save_counter + 1)
-    save_counter = save_intermediate(data, save_counter)
+    pages = ai_cleanup_and_save_every_time(pages, save_counter + 1)
+    save_counter = save_intermediate(pages, save_counter)
 
-    data = [{"page": d["page"], "text": fix_ellipses(d["text"])} for d in data]
-    save_counter = save_intermediate(data, save_counter)
+    pages = [{"page": d["page"], "text": fix_ellipses(d["text"])} for d in pages]
+    save_counter = save_intermediate(pages, save_counter)
     logging.info(f"6. sub ... for …")
 
-    data = [{"page": d["page"], "text": nltk.sent_tokenize(d["text"])} for d in data]
-    save_counter = save_intermediate(data, save_counter)
+    pages = [
+        {"number": d["page"], "content": nltk.sent_tokenize(d["text"])} for d in pages
+    ]
+    save_counter = save_intermediate(pages, save_counter)
     logging.info(f"7. separate sentences")
+
+    book = {"id": BOOK_ID, "title": TITLE, "author": AUTHOR, "pages": pages}
+    save_counter = save_intermediate(book, save_counter)
+    logging.info(f"8. fit pages into book")
+
+    book = json2md(book)
+    logging.info(f"9. convert to SADSL (.md)")
+
+    save_result(book)
+
+
+def save_result(book):
+    id = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    filename = f"output/{FILE_NAME}_{MODEL}_{id}.md"
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(book)
+        logging.info(f"saved result at {filename}")
 
 
 def get_annots_from_pdf():
@@ -74,11 +97,11 @@ def get_annots_from_pdf():
     subprocess.run(params)
 
 
-def save_intermediate(result, save_counter):
+def save_intermediate(result, save_counter, extension=".json"):
     save_counter += 1
 
     with open(
-        f"intermediate/{FILE_NAME}_{save_counter}.json", "w", encoding="utf-8"
+        f"intermediate/{FILE_NAME}_{save_counter}{extension}", "w", encoding="utf-8"
     ) as f:
         json.dump(result, f, indent=2)
 
