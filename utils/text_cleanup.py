@@ -15,8 +15,6 @@ def fix_ellipses(text):
 def fix_quotes(text):
     # Pattern to match a string starting and ending with double quotes
     text = re.sub(r'"([^"]*)"', r"«\1»", text)
-    # Pattern to match a string starting and ending with single quotes
-    text = re.sub(r"'([^']*)'", r"«\1»", text)
     return text
 
 

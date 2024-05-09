@@ -1,3 +1,4 @@
+
 input/*
 !input/test*
 
@@ -7,6 +8,8 @@ intermediate/*
 output/*
 !output/test*
 
+ready/*
+!ready/test*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
