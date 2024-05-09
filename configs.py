@@ -1,9 +1,17 @@
-FILE_NAME = "fg"
-AUTHOR = "Bruno Latour"
-TITLE = "Facing Gaia"
-BOOK_ID = "fg"
-MODEL = "sonnet"
+# testing things
+FILE_NAME = "test"
+AUTHOR = "Blune Platour"
+TITLE = "Lorem ipsum dolor sit amet consectetur"
+BOOK_ID = "tst"
+MODEL = "haiku"
 PAGE_OFFSET = 0
+
+# FILE_NAME = "fg"
+# AUTHOR = "Bruno Latour"
+# TITLE = "Facing Gaia"
+# BOOK_ID = "fg"
+# MODEL = "sonnet"
+# PAGE_OFFSET = 0
 
 # FILE_NAME = "ksi-pt1"
 # AUTHOR = "David Bloor"
@@ -12,13 +20,6 @@ PAGE_OFFSET = 0
 # MODEL = "sonnet"
 # PAGE_OFFSET = -9
 
-## testing things
-# FILE_NAME = "test"
-# AUTHOR = "Blune Platour"
-# TITLE = "Lorem ipsum dolor sit amet consectetur"
-# BOOK_ID = "tst"
-# MODEL = "haiku"
-# PAGE_OFFSET = 0
 
 MAX_CHARACTERS_PER_PLATE = [300, 350, 400]
 

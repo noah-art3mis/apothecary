@@ -53,11 +53,13 @@ Now:
             - `number`: page number
             - `content`: array of sentences
 1. check logs to see if anything is amiss (errors from the api, etc)
+1. edit prompt if necessary
 1. check diffs (from 4 to 5)
 1. manually edit output
 
 ## TODO
 
+-   add quotation marks to test
 -   test prompts with crucible
 -   notify if any errors happened at the end
 -   add skip ai cleanup

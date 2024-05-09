@@ -1,12 +1,11 @@
 import re
 import logging
+from dotenv import load_dotenv
+import anthropic
+from anthropic.types import Message, MessageParam
 
 from configs import MODEL, MODELS, PROMPT
 from utils.estimate_costs import estimate_costs
-
-import anthropic
-from anthropic.types import Message, MessageParam
-from dotenv import load_dotenv
 
 
 def ai_cleanup(text: str) -> tuple[str, int]:

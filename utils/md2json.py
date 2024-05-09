@@ -1,6 +1,6 @@
-from dataclasses import asdict
 import re
 import json
+from dataclasses import asdict
 from json2md import Book, Page
 
 INPUT = "output/test_haiku_20240503132623.md"
