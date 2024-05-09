@@ -59,6 +59,7 @@ Now:
 
 ## TODO
 
+-   refactor
 -   add quotation marks to test
 -   test prompts with crucible
 -   notify if any errors happened at the end

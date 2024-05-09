@@ -7,7 +7,7 @@ import nltk
 
 from utils.io import save_intermediate, save_result
 from utils.json2md import json2md
-from utils.extract_annotations import get_annots_from_pdf
+from utils.annotations import extract_annotations
 from utils.text_cleanup import (
     fix_ellipses,
     fix_quotes,
@@ -26,19 +26,12 @@ logging.basicConfig(
 
 
 def main():
-    save_counter = 0
-
+    logging.info("== APOTHECARY START == ")
     logging.info(f"purifying {FILE_NAME}.pdf")
 
-    if not os.path.exists(f"intermediate/{FILE_NAME}_0.json"):
-        logging.info(f"0. extracting annotations")
-        nltk.download("punkt")
-        get_annots_from_pdf(FILE_NAME)
-    else:
-        logging.info(f"0. {FILE_NAME}_0 exists, skipping annot extraction")
+    save_counter = 0
 
-    with open(f"intermediate/{FILE_NAME}_0.json", "r", encoding="utf-8") as f:
-        pages = json.load(f)
+    pages = extract_annotations()
 
     pages = [{"page": d["page"], "text": d["text"].strip()} for d in pages]
     save_counter = save_intermediate(pages, save_counter)
@@ -64,9 +57,9 @@ def main():
     save_counter = save_intermediate(pages, save_counter)
     logging.info(f"6. sub ... for …")
 
-    pages = [{"page": d["page"], "text": fix_quotes(d["text"])} for d in pages]
-    save_counter = save_intermediate(pages, save_counter)
-    logging.info(f"6. sub ... for …")
+    # pages = [{"page": d["page"], "text": fix_quotes(d["text"])} for d in pages]
+    # save_counter = save_intermediate(pages, save_counter)
+    # logging.info(f'7. sub " for «»')
 
     pages = [
         {"number": d["page"], "content": nltk.sent_tokenize(d["text"])} for d in pages
@@ -84,8 +77,8 @@ def main():
     savefile = save_result(book)
     logging.info(f"saved result at {savefile}")
 
+    logging.info("== APOTHECARY END == ")
+
 
 if __name__ == "__main__":
-    logging.info("== APOTHECARY START == ")
     main()
-    logging.info("== APOTHECARY END == ")
