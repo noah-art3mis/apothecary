@@ -1,8 +1,13 @@
 ## Automaton - Apothecary
 
-Purification for pdf files. Part of AUTOMATON, the simulacrum automation package.
+Purification for pdf files. 
 
 Results in a json file. Convert to .md for a manual cleanup pass, then convert back to json or yaml that can then be ingested by Semblance. If you want to translate it, do it before that.
+
+Part of AUTOMATON, the simulacrum automation package:
+- [Apothecary](https://github.com/noah-art3mis/apothecary) (text extraction and cleanup)
+- [Mirage](https://github.com/noah-art3mis/mirage) (palette chooser)
+- [Semblance](https://github.com/noah-art3mis/semblance) (image generation)
 
 ## How to
 
