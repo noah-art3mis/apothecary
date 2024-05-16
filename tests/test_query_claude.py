@@ -1,5 +1,5 @@
 import pytest
-from utils.query_claude import query_claude, get_model
+from utils.query_llm import query_claude, get_model
 from configs import MODEL
 
 

@@ -1,8 +1,5 @@
-import os
 import re
-import json
 import logging
-
 import nltk
 
 from utils.io import save_intermediate, save_result
@@ -14,7 +11,7 @@ from utils.text_cleanup import (
     ai_cleanup_and_save_every_time,
     concatenate_text_in_same_page,
 )
-from configs import FILE_NAME, AUTHOR, TITLE, BOOK_ID, MODEL, PAGE_OFFSET
+from configs import FILE_NAME, AUTHOR, TITLE, BOOK_ID, PAGE_OFFSET
 
 logging.basicConfig(
     level=logging.INFO,

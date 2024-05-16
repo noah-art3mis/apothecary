@@ -3,7 +3,7 @@ import json
 import logging
 
 from configs import FILE_NAME
-from utils.query_claude import ai_cleanup
+from utils.query_llm import ai_cleanup
 
 
 def fix_ellipses(text):

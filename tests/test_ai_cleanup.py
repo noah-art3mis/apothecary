@@ -1,4 +1,4 @@
-from utils.query_claude import ai_cleanup
+from utils.query_llm import ai_cleanup
 import pytest
 import json
 

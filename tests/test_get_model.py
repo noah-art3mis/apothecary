@@ -1,4 +1,4 @@
-from utils.query_claude import get_model
+from utils.query_llm import get_model
 import pytest
 
 

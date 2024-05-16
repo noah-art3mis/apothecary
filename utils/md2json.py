@@ -1,19 +1,19 @@
+import sys
 import re
 import json
 from dataclasses import asdict
-from json2md import Book, Page
-
-INPUT = "output/test_haiku_20240503132623.md"
-OUTPUT = "output/test_haiku_20240503132623_munged.json"
+from my_types import Book, Page
 
 
-def main():
-    with open(INPUT, "r", encoding="utf-8") as file:
-        md_text = file.read()
+def md2json(md_text: str):
+
+    raise ValueError(
+        "TODO: this breaks with '31b' type page numbers. it also skips the last item"
+    )
 
     # Regex patterns to capture metadata and page content
     metadata_pattern = r"## METADATA([\s\S]*?)## PAGES"
-    page_pattern = r"### (\d+)([\s\S]*?)(?=### \d+|##\Z)"
+    page_pattern = r"### (\d+)([a-zA-Z])?([\s\S]*?)(?=### \d+|##\Z)"
 
     # Extract metadata
     metadata_content = re.search(metadata_pattern, md_text, re.MULTILINE)
@@ -44,7 +44,22 @@ def main():
         pages=pages,
     )
 
-    # Convert to JSON
+    return book
+
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: json2md.py <input_file> <output_file>")
+        sys.exit(1)
+
+    INPUT = sys.argv[1]
+    OUTPUT = sys.argv[2]
+
+    with open(INPUT, "r", encoding="utf-8") as file:
+        book_dict = file.read()
+
+    book = md2json(book_dict)
+
     with open(OUTPUT, "w", encoding="utf-8") as file:
         book_dict = asdict(book)
         json.dump(book_dict, file, indent=2)
