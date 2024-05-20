@@ -1,6 +1,5 @@
 from utils.query_llm import ai_cleanup
 import pytest
-import json
 
 
 @pytest.fixture
@@ -145,6 +144,16 @@ def test_remove_from_front(file_handler):
 def test_capitalize(file_handler):
     data = "the clash between Popper and Kuhn represents an almost pure case of the opposition between what may be called the Enlightenment and Romantic ideologies."
     expected = "The clash between Popper and Kuhn represents an almost pure case of the opposition between what may be called the Enlightenment and Romantic ideologies."
+
+    result, _ = ai_cleanup(data)
+    log = {"data": data, "expected": expected, "result": result}
+    file_handler.append(log)
+    assert result == expected
+
+
+def test_(file_handler):
+    data = "information ... This apparatus of scholarly commentary and interpretation unavoidably mediates our grasp of the past. It is a formidable and extensive apparatus. In due proportion to its size is its scope for imposing the standards and preoccupations of the present on to the past. Indeed some such imposition is a neces sary feature of all understanding. The only question is: what standards shall be imposed and what concerns will govern the work which is put into the manufacture of our sense of the past? ... If historians should desire to show the cumulative character of mathematics then their interpretive apparatus will enable them to do so. Counterexamples to this vision of progress will become periods of slow development or deviation into error or wrong turnings. Instead of alternatives being exhibited the task becomes one of sorting out the wheat from the chaff. ... historians ... It would be unjust and too simple to say that in such accounts history had been falsified. No standards of integrity or scholarly in Indeed such virtues are impressively and dustry are violated. abundantly evident. Rather it should be said that these virtues are all employed in the interests of an overall progressivist vision, and it is this which must be challenged."
+    expected = "information ... This apparatus of scholarly commentary and interpretation unavoidably mediates our grasp of the past. It is a formidable and extensive apparatus. In due proportion to its size is its scope for imposing the standards and preoccupations of the present onto the past. Indeed some such imposition is a necessary feature of all understanding. The only question is: what standards shall be imposed and what concerns will govern the work which is put into the manufacture of our sense of the past? ... If historians should desire to show the cumulative character of mathematics then their interpretive apparatus will enable them to do so. Counterexamples to this vision of progress will become periods of slow development or deviation into error or wrong turnings. Instead of alternatives being exhibited the task becomes one of sorting out the wheat from the chaff. ... historians ... It would be unjust and too simple to say that in such accounts history had been falsified. No standards of integrity or scholarly industry are violated. Indeed such virtues are impressively and abundantly evident. Rather it should be said that these virtues are all employed in the interests of an overall progressivist vision, and it is this which must be challenged"
 
     result, _ = ai_cleanup(data)
     log = {"data": data, "expected": expected, "result": result}

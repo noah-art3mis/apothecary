@@ -46,26 +46,17 @@ Now:
 1. output is saved at `output`
     - if you need to debug something, intermediate steps are saved at `intermediates`
     - check changes in a [diffchecker](https://www.diffchecker.com/text-compare/)
-    - returns a Book object with the following fields:
-        - `author`
-        - `title`
-        - `id` (short identifier such as "tst" or "ime")
-        - `pages` (array of objects)
-            - `number`: page number
-            - `content`: array of sentences
+    - returns a .md file
 1. check logs to see if anything is amiss (errors from the api, etc). if changing models, you might need to change the prompt as well
 1. edit prompt if necessary
-1. check diffs (from 4 to 5)
+1. check diffs (4 and 5 are the ai cleanup ones)
 1. manually edit output. move to `ready`
 1. run `python3 utils/md2json.py ready/<file>.md ready/<file>.json` (pupil/squire/protege)
 
 ## TODO
 
--   ! md2json does not parse properly '31b' type page numbers
--   ! skips last page
--   does not keep original formatting (italics, etc)
+-   fix quotation marks
 -   refactor
--   add quotation marks to test
 -   test prompts with crucible
 -   notify if any errors happened at the end
 -   add skip ai cleanup
@@ -76,6 +67,7 @@ Now:
 -   doesnt concatenate annotations between pages
 -   concatenates in the same page even if different
 -   does not treat ellipses properly if they were already in the text. won't be fixed
+-   does not keep original formatting (italics, etc)
 
 ## Refs
 

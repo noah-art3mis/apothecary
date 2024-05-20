@@ -11,17 +11,7 @@ PAGE_OFFSET = 0
 # TITLE = "Knowledge and Human Interests"
 # BOOK_ID = "ksi"
 # MODEL = "gpt4o"
-# PAGE_OFFSET = 0
-
-# FILE_NAME = "ksi-pt1"
-# AUTHOR = "David Bloor"
-# TITLE = "Knowledge and Human Interests"
-# BOOK_ID = "ksi-pt1"
-# MODEL = "sonnet"
 # PAGE_OFFSET = -9
-
-
-MAX_CHARACTERS_PER_PLATE = [300, 350, 400]
 
 PROMPT = """<text>{snippet}</text>
 

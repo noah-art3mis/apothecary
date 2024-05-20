@@ -29,6 +29,8 @@ def json2md(book_dict: dict) -> str:
             result += line + "\n"
             result += "\n"
 
+    result += "## END"
+
     return result
 
 

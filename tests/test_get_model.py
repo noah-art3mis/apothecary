@@ -13,6 +13,9 @@ def test_sonnet():
 def test_haiku():
     assert get_model("haiku") == "claude-3-haiku-20240307"
 
+def test_opus():
+    assert get_model("gpt4o") == "gpt4o"
+
 
 def test_not_found():
     with pytest.raises(ValueError) as e:
