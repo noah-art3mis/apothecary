@@ -1,6 +1,5 @@
 import sys
 import json
-from dataclasses import dataclass
 from utils.my_types import Book, Page
 
 
@@ -29,6 +28,8 @@ def json2md(book_dict: dict) -> str:
         for line in page.content:
             result += line + "\n"
             result += "\n"
+
+    result += "## END"
 
     return result
 

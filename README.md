@@ -32,41 +32,39 @@ Now:
     - this only matters if you want to know exactly which page the annotation comes from. leave at 0 otherwise.
     - scanned pdfs usually misalign the page number of the book with the page number of the pdf.
     - check how many pages you need to add or subtract to make the pages sync. check in a few places since it can vary
-        - if page is 100 and pdf_page is 110, the page offset should be -10
-        - if page is 100 and pdf_page is 90, the page offset should be 10
-1. set `ANTHROPIC_API_KEY` in `.env`
-    - get an API key if you don't have one ([here](https://docs.anthropic.com/claude/reference/getting-started-with-the-api)).
+        - if pdf_page is 100 and page is 90, the page offset should be -10
+        - if pdf_page is 100 and page is 110, the page offset should be 10
+1. set `ANTHROPIC_API_KEY` and/or `OPENAI_API_KEY` in `.env`
+    - get an API key if you don't have one (i.e. [here](https://docs.anthropic.com/claude/reference/getting-started-with-the-api)).
     - make a `.env` file with your API key.
         - `echo "ANTHROPIC_API_KEY=your_api_key_here" > .env`
-    - API calls cost money.
+    - API calls cost money. See [here](https://artificialanalysis.ai/)
 1. set `MODEL`
     - options:
         - `haiku`: less than 10 cents per book. (12x cheaper than sonnet)
         - `sonnet`: less than $1 per book. this is the default.
         - `opus`: i don't know (5x more expensive than sonnet)
+        - `gpt4o`: if sonnet costs $6, this one costs $7.5. it is bigger, better and faster. This is now the obvious choice.
 1. extract annotations from pdf. this step also cleans up some stuff.
     - `python3 purify.py`
     - output does not show in stdin, but in `purify.log`
 1. output is saved at `output`
     - if you need to debug something, intermediate steps are saved at `intermediates`
     - check changes in a [diffchecker](https://www.diffchecker.com/text-compare/)
-    - returns a Book object with the following fields:
-        - `author`
-        - `title`
-        - `id` (short identifier such as "tst" or "ime")
-        - `pages` (array of objects)
-            - `number`: page number
-            - `content`: array of sentences
-1. check logs to see if anything is amiss (errors from the api, etc)
-1. check diffs (from 4 to 5)
-1. manually edit output
+    - returns a .md file
+1. check logs to see if anything is amiss (errors from the api, etc). if changing models, you might need to change the prompt as well
+1. edit prompt if necessary
+1. check diffs (4 and 5 are the ai cleanup ones)
+1. manually edit output. move to `ready`
+1. run `python3 utils/md2json.py ready/<file>.md ready/<file>.json` (pupil/squire/protege)
 
 ## TODO
 
+-   fix quotation marks
+-   refactor
 -   test prompts with crucible
 -   notify if any errors happened at the end
 -   add skip ai cleanup
--   add [prompt testing library](https://docs.anthropic.com/claude/docs/prompt-engineering)
 -   separate identification and correction [tasks](https://docs.anthropic.com/claude/docs/chain-prompts#validating-outputs)
 
 ## Known issues
@@ -74,6 +72,7 @@ Now:
 -   doesnt concatenate annotations between pages
 -   concatenates in the same page even if different
 -   does not treat ellipses properly if they were already in the text. won't be fixed
+-   does not keep original formatting (italics, etc)
 
 ## Refs
 

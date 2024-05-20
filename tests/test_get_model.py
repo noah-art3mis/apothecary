@@ -1,4 +1,4 @@
-from utils.query_claude import get_model
+from utils.query_llm import get_model
 import pytest
 
 
@@ -12,6 +12,9 @@ def test_sonnet():
 
 def test_haiku():
     assert get_model("haiku") == "claude-3-haiku-20240307"
+
+def test_opus():
+    assert get_model("gpt4o") == "gpt4o"
 
 
 def test_not_found():
